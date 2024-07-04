@@ -1,0 +1,11 @@
+.main_content {
+  margin: 0 260px;
+}
+
+.MovieReview_write_btn {
+  background-color: #cf4c4c;
+  color: white;
+  border-style: none;
+  border-radius: 10px;
+  padding: 10px;
+}
