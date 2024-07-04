@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import ReviewList from '../components/ReviewList';
+import MovieList from '../components/MovieList';
 import styles from './Home.module.css';
 
 function Home() {
@@ -21,6 +22,7 @@ function Home() {
       </div>
       <div className={styles.main_content}>
         <ReviewList />
+        <MovieList />
       </div>
     </div>
   );
