@@ -12,12 +12,12 @@ function Navbar() {
       </div>
       <ul className={styles.nav_menu}>
         <li>
-          <Link to="/" className={styles.nav_link}>
+          <Link to="/movieSearch" className={styles.nav_link}>
             영화 검색
           </Link>
         </li>
         <li>
-          <Link to="/" className={styles.nav_link}>
+          <Link to="/movieReview" className={styles.nav_link}>
             영화 후기
           </Link>
         </li>
