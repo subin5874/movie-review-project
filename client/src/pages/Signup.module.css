@@ -1,0 +1,64 @@
+.main_content {
+  text-align: center;
+  margin: 0 360px;
+  margin-top: 110px;
+}
+
+.signup_form {
+  padding: 0 30%;
+}
+
+.signup_box > span {
+  color: white;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.signup_input_box {
+  display: grid;
+  margin: 25px 0;
+}
+
+.signup_input_box > label {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  display: inline-flex;
+  /* margin-left: 20%; */
+  margin-bottom: 23px;
+}
+
+.signup_input {
+  border-style: none;
+  background: none;
+  outline: none;
+  color: white;
+  border-bottom: 1px solid #515151;
+  font-size: 20px;
+  /* margin: 0 20%; */
+  padding: 5px;
+}
+
+.input_warning_msg {
+  text-align: left;
+  color: #68a968;
+  margin-top: 5px;
+}
+
+.error_msg {
+  text-align: left;
+  color: #cf4c4c;
+  margin-top: 2px;
+}
+
+.signup_submit_btn {
+  width: 200px;
+  height: 50px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: #cf4c4c;
+  color: white;
+  border-style: none;
+  border-radius: 10px;
+  padding: 10px;
+}
