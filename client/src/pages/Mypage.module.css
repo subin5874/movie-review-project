@@ -1,0 +1,20 @@
+.main_content {
+  margin: 0 320px;
+  margin-top: 110px;
+}
+
+.userInfo_box {
+  text-align: left;
+  margin-bottom: 70px;
+}
+
+.userInfo_box > span {
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.content_flex {
+  display: flex;
+  gap: 20px;
+}

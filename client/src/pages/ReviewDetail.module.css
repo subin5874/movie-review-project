@@ -1,0 +1,76 @@
+.main_content {
+  margin: 0 360px;
+  margin-top: 110px;
+  text-align: left;
+}
+
+.movie_title > span {
+  color: white;
+  font-size: 35px;
+}
+
+.movie_rating {
+  color: #ffea31;
+  font-size: 50px;
+}
+
+.movie_one_line_review_box {
+  border-bottom: 1px solid #bababa;
+  padding-bottom: 20px;
+  margin: 30px 0;
+}
+
+.movie_one_line_review_box > label {
+  color: #bababa;
+  font-size: 18px;
+  margin-right: 15px;
+}
+
+.movie_one_line_review_box > span {
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.movie_review {
+  color: white;
+  font-size: 18px;
+  height: 350px;
+}
+
+.review_box_bottom {
+  display: flex;
+  border-top: 1px solid #bababa;
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  padding-top: 10px;
+}
+
+.user_info_box {
+  display: flex;
+  text-align: center;
+  gap: 10px;
+}
+
+.user_info_box > span {
+  color: #bababa;
+  font-size: 18px;
+}
+
+.modify_btn_box {
+  gap: 10px;
+  display: flex;
+}
+
+.modify_btn {
+  width: 70px;
+  height: 45px;
+  font-size: 15px;
+  font-weight: 600;
+  background-color: #cf4c4c;
+  color: white;
+  border-style: none;
+  border-radius: 15px;
+  padding: 10px;
+}
