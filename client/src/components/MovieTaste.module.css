@@ -1,0 +1,19 @@
+.movieTaste_container {
+  width: 30%;
+}
+
+.movieGenre_box {
+  text-align: left;
+}
+
+.movieGenre_box > span {
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.movieGenre_list > li {
+  color: white;
+  font-size: 20px;
+  margin-left: -15px;
+}
