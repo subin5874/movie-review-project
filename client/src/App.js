@@ -6,6 +6,11 @@ import Home from './pages/Home';
 import MovieReview from './pages/MovieReview';
 import MovieSearch from './pages/MovieSearch';
 import MovieDetail from './pages/MovieDetail';
+import WriteReview from './pages/WriteReview';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import ReviewDetail from './pages/ReviewDetail';
+import Mypage from './pages/Mypage';
 
 function App() {
   // API호출
@@ -33,7 +38,16 @@ function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/movieReview" exact element={<MovieReview />} />
           <Route path="/movieSearch" exact element={<MovieSearch />} />
-          <Route path="/movieDetailView" exact element={<MovieDetail />} />
+          <Route path="/movieDetail" exact element={<MovieDetail />} />
+          {/* <Route path="/movieDetail:MovieNo" exact element={<MovieDetail />} />
+              MovieNo 넘어가도록 하기*/}
+          <Route path="/writeReview" exact element={<WriteReview />} />
+          <Route path="/login" exact element={<Login />} />
+          <Route path="/signup" exact element={<Signup />} />
+          <Route path="/reviewDetail" exact element={<ReviewDetail />} />
+          {/* <Route path="/reviewDetail:boardNo" exact element={<ReviewDetail />} />
+              boardNo 넘어가도록 하기*/}
+          <Route path="/mypage" exact element={<Mypage />} />
         </Routes>
       </BrowserRouter>
     </div>
