@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './Signup.module.css';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
+import debounce from 'lodash/debounce';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -13,22 +18,91 @@ function Signup() {
   const [userName, setUserName] = useState('');
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
+  const [isAvailableUserName, setIsAvailableUserName] = useState(null);
+  const [isAvailableID, setIsAvailableID] = useState(null);
 
   const onChangeUserName = (e) => {
-    setUserName(e);
-    console.log(e);
+    setUserName(e.target.value);
   };
   const onChangeId = (e) => {
-    setId(e);
-    console.log(e);
-  };
-  const onChangePassword = (e) => {
-    setPassword(e);
-    console.log(e);
+    setId(e.target.value);
   };
 
-  const onSignup = () => {
-    console.log('회원가입');
+  //User Name 중복 체크
+  useEffect(() => {
+    if (userName) {
+      const debouncedCheckUsername = debounce(checkUsername, 500);
+      debouncedCheckUsername(userName);
+
+      return () => {
+        debouncedCheckUsername.cancel();
+      };
+    }
+  }, [userName]);
+
+  const checkUsername = async (userName) => {
+    console.log('확인 시작');
+    axios
+      .get('http://localhost:3003/user/checkUserName', {
+        params: {
+          userName: userName,
+        },
+      })
+      .then((res) => {
+        console.log('중복확인 결과:', res.data.isAvailable);
+        setIsAvailableUserName(res.data.isAvailable);
+      })
+      .catch((err) => {
+        console.error('Error checking username availability:', err);
+      });
+  };
+
+  //ID 중복 체크
+  useEffect(() => {
+    if (id) {
+      const debouncedCheckID = debounce(checkID, 500);
+      debouncedCheckID(id);
+
+      return () => {
+        debouncedCheckID.cancel();
+      };
+    }
+  }, [id]);
+
+  const checkID = async (id) => {
+    console.log('확인 시작');
+    axios
+      .get('http://localhost:3003/user/checkID', {
+        params: {
+          id: id,
+        },
+      })
+      .then((res) => {
+        console.log('중복확인 결과:', res.data.isAvailable);
+        setIsAvailableID(res.data.isAvailable);
+      })
+      .catch((err) => {
+        console.error('Error checking username availability:', err);
+      });
+  };
+  const onChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const onSignup = (data) => {
+    axios
+      .post('http://localhost:3003/user/signup', {
+        userName: data.userName,
+        id: data.id,
+        password: data.password,
+      })
+      .then((res) => {
+        window.alert('회원가입이 성공적으로 완료되었습니다!');
+        navigate('/login');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
   return (
     <div className={styles.signup_container}>
@@ -60,7 +134,20 @@ function Signup() {
                 })}
                 onChange={onChangeUserName}
               />
-              <span className={styles.input_warning_msg}>*중복 불가능</span>
+              {userName &&
+                (isAvailableUserName ? (
+                  <span className={styles.isAvailable_true_msg}>
+                    *사용 가능한 아이디입니다.
+                  </span>
+                ) : (
+                  <span className={styles.isAvailable_false_msg}>
+                    *중복된 아이디입니다.
+                  </span>
+                ))}
+              {!userName && (
+                <span className={styles.input_warning_msg}>*중복 불가능</span>
+              )}
+
               {errors.userName && (
                 <span className={styles.error_msg}>
                   {errors.userName.message}
@@ -89,7 +176,19 @@ function Signup() {
                 })}
                 onChange={onChangeId}
               />
-              <span className={styles.input_warning_msg}>*중복 불가능</span>
+              {id &&
+                (isAvailableID ? (
+                  <span className={styles.isAvailable_true_msg}>
+                    *사용 가능한 아이디입니다.
+                  </span>
+                ) : (
+                  <span className={styles.isAvailable_false_msg}>
+                    *중복된 아이디입니다.
+                  </span>
+                ))}
+              {!id && (
+                <span className={styles.input_warning_msg}>*중복 불가능</span>
+              )}
               {errors.id && (
                 <span className={styles.error_msg}>{errors.id.message}</span>
               )}
@@ -137,8 +236,10 @@ function Signup() {
                 }
                 {...register('ckPassword', {
                   required: '*비밀번호를 확인해주세요.',
-                  pattern: new RegExp(`${password}`, 'g'),
-                  message: '*비밀번호가 일치하지 않습니다.',
+                  pattern: {
+                    value: new RegExp(`${password}`, 'g'),
+                    message: '*비밀번호가 일치하지 않습니다.',
+                  },
                 })}
               />
               {errors.ckPassword && (
