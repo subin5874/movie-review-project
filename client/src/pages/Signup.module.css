@@ -41,14 +41,30 @@
 
 .input_warning_msg {
   text-align: left;
+  color: #c0c0c0;
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.isAvailable_true_msg {
+  text-align: left;
   color: #68a968;
   margin-top: 5px;
+  font-size: 15px;
+}
+
+.isAvailable_false_msg {
+  text-align: left;
+  color: #cf4c4c;
+  margin-top: 5px;
+  font-size: 15px;
 }
 
 .error_msg {
   text-align: left;
   color: #cf4c4c;
   margin-top: 2px;
+  font-size: 15px;
 }
 
 .signup_submit_btn {
