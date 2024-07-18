@@ -18,7 +18,7 @@ function MovieSearch() {
       </div>
       <div className={styles.main_content}>
         <SearchBar onSearch={searchSubmit} />
-        <div className={styles.movieListContainer}>
+        <div className={styles.movieList_container}>
           {!searchKeyword && <MovieList />}
           {searchKeyword && <MovieList searchKeyword={searchKeyword} />}
         </div>
