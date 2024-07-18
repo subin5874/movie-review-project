@@ -1,94 +1,93 @@
 import React, { useEffect, useState } from 'react';
 import styles from './MovieList.module.css';
-import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { getNowPlayingMovies } from '../api/nowPlayingMovies';
+import { getPopularMovies } from '../api/PopularMovies';
+import { searchMovies } from '../api/SearchMovies';
+import { formatPosterPath } from '../utils/formatPosterPath';
 
-function MovieList() {
-  const [movieList, setMovieList] = useState([
-    {
-      title: '영화 제목1',
-      poster_url:
-        'https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fmovie-phinf.pstatic.net%2F20240613_225%2F1718269309742nRyRU_JPEG%2Fmovie_image.jpg',
-    },
-    {
-      title: '영화 제목2',
-      poster_url:
-        'https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fmovie-phinf.pstatic.net%2F20240613_225%2F1718269309742nRyRU_JPEG%2Fmovie_image.jpg',
-    },
-    {
-      title: '영화 제목3',
-      poster_url:
-        'https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fmovie-phinf.pstatic.net%2F20240613_225%2F1718269309742nRyRU_JPEG%2Fmovie_image.jpg',
-    },
-    {
-      title: '영화 제목4',
-      poster_url:
-        'https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fmovie-phinf.pstatic.net%2F20240613_225%2F1718269309742nRyRU_JPEG%2Fmovie_image.jpg',
-    },
-  ]);
+function MovieList({ searchKeyword }) {
+  const [movieList, setMovieList] = useState([]);
 
-  const categories = [
-    { name: '영화 후기', value: 'movieReview' },
-    { name: '최근 개봉 영화', value: 'NowPlayingMoview' },
-    { name: '평점 높은 영화', value: 'topRatedMovie' },
-    { name: '요즘 인기 있는 영화', value: 'popularMovie' },
-  ];
-
-  const searchKeyword = '아';
-
-  const [MList, setMList] = useState([]);
-
-  /*
-
-  const BASE_URL = 'https://api.themoviedb.org/3/movie';
-  const apiKey = process.env.REACT_APP_TMDB_API_KEY;
-
-  const searchMovies = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/search/movie?include_adult=false&language=ko-KR&page=1`,
-        {
-          params: {
-            query: searchKeyword,
-          },
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            accept: 'application/json',
-          },
-        }
-      );
-      setMList(response.data.results);
-      console.log(MList);
-      return null;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return null;
-    }
-  };
+  const pathName = useLocation().pathname;
 
   useEffect(() => {
-    searchMovies();
-  }, []);
+    const fetchMovies = async () => {
+      let results = [];
+      let slicedResults = [];
+      if (pathName === '/') {
+        results = await getNowPlayingMovies();
+        slicedResults = results.slice(0, 4);
+      } else if (pathName === '/movieSearch' && !searchKeyword) {
+        results = await getPopularMovies();
+        slicedResults = results.slice(0, 4);
+      }
+      const updatedMovieList = slicedResults.map((slicedResults) => {
+        return {
+          ...slicedResults,
+          poster_path: formatPosterPath(slicedResults.poster_path),
+        };
+      });
+      setMovieList(updatedMovieList);
+    };
+    fetchMovies();
+  }, [pathName, searchKeyword]);
 
-  */
+  useEffect(() => {
+    const fetchsearchMovies = async () => {
+      let results = [];
+      if (searchKeyword) {
+        results = await searchMovies(searchKeyword);
+      }
+      const updatedMovieList = results.map((results) => {
+        return {
+          ...results,
+          poster_path: formatPosterPath(results.poster_path),
+        };
+      });
+      setMovieList(updatedMovieList);
+    };
+    fetchsearchMovies();
+  }, [searchKeyword]);
+
+  const [movieListTitle, setMovieListTitle] = useState('');
+  const [movieListClassName, setMovieListClassName] = useState(
+    styles.movieList_container
+  );
+
+  //페이지에 따른 리스트 타이틀 변경
+  useEffect(() => {
+    if (pathName === '/mypage') {
+      setMovieListClassName(styles.movieList_container_mypage);
+      setMovieListTitle('내가 작성한 영화 후기');
+    } else if (searchKeyword) {
+      setMovieListTitle('');
+    } else if (pathName === '/movieSearch') {
+      setMovieListTitle('인기있는 영화');
+    } else if (pathName === '/') {
+      setMovieListTitle('최근 개봉 영화');
+    }
+  }, [pathName, searchKeyword]);
 
   return (
-    <div className={styles.movieList_container}>
-      <span>최근 영화</span>
+    <div className={movieListClassName}>
+      <span className={styles.movieList_title}>{movieListTitle}</span>
       <div className={styles.movieList_box}>
-        {movieList.map((data, i) => {
-          return (
-            <div className={styles.movie_box}>
-              <div className={styles.moviePoster_box}>
-                <img
-                  src={data.poster_url}
-                  className={styles.movie_poster}
-                  alt="poster"
-                />
+        {movieList &&
+          movieList.map((data, i) => {
+            return (
+              <div className={styles.movie_box}>
+                <div className={styles.moviePoster_box}>
+                  <img
+                    src={data.poster_path}
+                    className={styles.movie_poster}
+                    alt="poster"
+                  />
+                </div>
+                <span>{data.title}</span>
               </div>
-              <span>{data.title}</span>
-            </div>
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );
