@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './MovieList.module.css';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getNowPlayingMovies } from '../api/nowPlayingMovies';
 import { getPopularMovies } from '../api/PopularMovies';
 import { searchMovies } from '../api/SearchMovies';
@@ -9,6 +9,7 @@ import { formatPosterPath } from '../utils/formatPosterPath';
 function MovieList({ searchKeyword }) {
   const [movieList, setMovieList] = useState([]);
 
+  const navigate = useNavigate();
   const pathName = useLocation().pathname;
 
   useEffect(() => {
@@ -76,16 +77,21 @@ function MovieList({ searchKeyword }) {
         {movieList &&
           movieList.map((data, i) => {
             return (
-              <div className={styles.movie_box}>
-                <div className={styles.moviePoster_box}>
-                  <img
-                    src={data.poster_path}
-                    className={styles.movie_poster}
-                    alt="poster"
-                  />
+              <Link
+                to={`/movieDetail/${data.id}`}
+                className={styles.go_movieDetail}
+              >
+                <div className={styles.movie_box}>
+                  <div className={styles.moviePoster_box}>
+                    <img
+                      src={data.poster_path}
+                      className={styles.movie_poster}
+                      alt="poster"
+                    />
+                  </div>
+                  <span>{data.title}</span>
                 </div>
-                <span>{data.title}</span>
-              </div>
+              </Link>
             );
           })}
       </div>
