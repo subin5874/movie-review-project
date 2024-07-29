@@ -38,9 +38,7 @@ function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/movieReview" exact element={<MovieReview />} />
           <Route path="/movieSearch" exact element={<MovieSearch />} />
-          <Route path="/movieDetail" exact element={<MovieDetail />} />
-          {/* <Route path="/movieDetail:MovieNo" exact element={<MovieDetail />} />
-              MovieNo 넘어가도록 하기*/}
+          <Route path="/movieDetail/:movieNo" exact element={<MovieDetail />} />
           <Route path="/writeReview" exact element={<WriteReview />} />
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<Signup />} />
