@@ -1,72 +1,97 @@
 import React, { useState } from 'react';
+import styles from './MovieInfo.module.css';
 import { useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getMovieDetails } from '../api/movieDetails';
+import { getReleaseDates } from '../api/movieReleaseDates.js';
+import { formatPosterPath } from '../utils/formatPosterPath';
 
 function MovieInfo() {
-  const MID = 150540;
+  const { movieNo } = useParams();
+  const [movieInfo, setMovieInfo] = useState([]);
 
-  const [MInfo, setMInfo] = useState();
-  //타입 알맞게 지정해서 response 들어가도록 하기.
-
-  const apiKey = process.env.REACT_APP_TMDB_API_KEY;
-
-  const MovieDetails = async () => {
-    try {
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/${MID}?language=ko-KR`,
-        {
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            accept: 'application/json',
-          },
-        }
-      );
-      console.log('response : ' + JSON.stringify(response.data));
-      setMInfo(JSON.stringify(response.data));
-      console.log(MInfo);
-      return null;
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return null;
-    }
-  };
+  const [firstGenre, setFirstGenre] = useState('');
+  const [certification, setCertification] = useState('');
 
   useEffect(() => {
-    MovieDetails();
-  }, []);
+    const fetchMovies = async () => {
+      try {
+        const movieInforesults = await getMovieDetails(movieNo);
+        const movieReleaseDates = await getReleaseDates(movieNo);
+        setMovieInfo({
+          ...movieInforesults,
+          poster_path: formatPosterPath(movieInforesults.poster_path),
+          vote_average: movieInforesults.vote_average.toFixed(1),
+          releaseDates: movieReleaseDates,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchMovies();
+    console.log(movieInfo);
+  }, [movieNo]);
+
+  useEffect(() => {
+    if (movieInfo.genres) {
+      setFirstGenre(movieInfo.genres[0]?.name);
+    } else {
+      setFirstGenre('Unknown Genre');
+    }
+
+    if (movieInfo.releaseDates) {
+      let cert = movieInfo.releaseDates.release_dates[0].certification;
+      const match = cert.match(/(\d+)/);
+      if (match) {
+        console.log(match);
+        setCertification(match[0] + '세 이상 관람가');
+      } else if (cert === 'ALL' || cert === 'All') {
+        setCertification('ALL');
+      } else if (cert === '') {
+        setCertification('');
+      }
+    } else {
+      setCertification('');
+    }
+  }, [movieInfo]);
+  const navigate = useNavigate();
+
+  const onWriteReviewBtn = () => {
+    navigate('/writeReview', { state: movieNo });
+  };
 
   return (
-    <div className="movieInfo_container">
-      <div>
-        <div>
-          <img src="posterpath" alt="poster" />
+    <div className={styles.movieInfo_container}>
+      <div className={styles.movieInfo_box}>
+        <div className={styles.movieInfo_poster}>
+          <img
+            src={movieInfo.poster_path}
+            className={styles.movie_poster}
+            alt="poster"
+          />
+          <button
+            type="button"
+            onClick={onWriteReviewBtn}
+            className={styles.go_writeReview_btn}
+          >
+            후기 작성하기
+          </button>
         </div>
-        <div>
-          <span>제목</span>
+      </div>
+      <div className={styles.movieInfo_box}>
+        <span className={styles.movieInfo_title}>{movieInfo.title}</span>
+        <div className={styles.movieInfo_spec}>
+          <span>{certification}</span>
+          <span>{firstGenre}</span>
+          <span>{movieInfo.runtime}분</span>
+          <span>{movieInfo.release_date}</span>
         </div>
-        <div>
-          <span>연령</span>
-          <span>장르</span>
-          <span>상영시간</span>
-          <span>개봉일</span>
+        <div className={styles.movieInfo_rating}>
+          <span>★ {movieInfo.vote_average}</span>
         </div>
-        <div>
-          <span>★ 별점</span>
-        </div>
-
-        <div>
-          <span>줄거리</span>
-          <span>줄거리 내용</span>
-        </div>
-
-        <div>
-          <span>감독</span>
-          <span>감독</span>
-        </div>
-
-        <div>
-          <span>배우</span>
-          <span>배우</span>
+        <div className={styles.movieInfo_summary}>
+          <label>줄거리</label>
+          <span>{movieInfo.overview}</span>
         </div>
       </div>
     </div>
