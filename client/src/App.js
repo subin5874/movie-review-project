@@ -13,24 +13,6 @@ import ReviewDetail from './pages/ReviewDetail';
 import Mypage from './pages/Mypage';
 
 function App() {
-  // API호출
-  /*
-  const fetchMovies = async () => {
-    try {
-      const response = await axios.get(apiEndpoint);
-      setMovies(response.data.results);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setMovies([]); // 에러 발생 시 빈 배열로 초기화
-    }
-  };
-
-  useEffect(() => {
-    fetchMovies();
-  }, [apiEndpoint]); // apiEndpoint가 변경될 때마다 호출
-
-  */
-
   return (
     <div className="App">
       <BrowserRouter>
