@@ -28,37 +28,35 @@
 
 .write_rating_box {
   display: flex;
-  margin-top: -20px;
+  margin-top: 20px;
   padding-bottom: 20px;
 }
 
+.rating_radio_btn {
+  margin-top: -20px;
+  padding-bottom: 15px;
+}
+
 .rating_star {
-  appearance: none;
   padding: 1px;
   text-align: left;
-  display: block;
+  display: none;
+  color: transparent;
 }
 
-.rating_star::after {
-  content: '★';
+.star {
   color: #8e8e8e;
   font-size: 50px;
-}
-/* 별점 기본 모습 */
-
-.rating_star:hover::after,
-.rating_star:has(~ .rating_star:hover)::after,
-.rating_star:checked::after,
-.rating_star:has(~ .rating_star:checked)::after {
-  content: '★';
-  color: #ffea31;
+  transition: color 0.2s;
 }
 
-.rating_star:hover ~ .rating_star::after {
-  content: '★';
-  color: #8e8e8e;
+.star.inactive {
+  color: #8e8e8e; /* 비활성화된 별 색상 (회색) */
 }
-/* 안됨. css로 할지 js로 할지 알아보기 */
+
+.star.active {
+  color: #fbb900; /* 활성화된 별 색상 */
+}
 
 .write_oneLineReview {
   width: 100%;
