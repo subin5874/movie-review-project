@@ -24,9 +24,11 @@ function App() {
           <Route path="/writeReview" exact element={<WriteReview />} />
           <Route path="/login" exact element={<Login />} />
           <Route path="/signup" exact element={<Signup />} />
-          <Route path="/reviewDetail" exact element={<ReviewDetail />} />
-          {/* <Route path="/reviewDetail:boardNo" exact element={<ReviewDetail />} />
-              boardNo 넘어가도록 하기*/}
+          <Route
+            path="/reviewDetail/:boardNo"
+            exact
+            element={<ReviewDetail />}
+          />
           <Route path="/mypage" exact element={<Mypage />} />
         </Routes>
       </BrowserRouter>
