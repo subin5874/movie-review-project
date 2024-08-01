@@ -33,6 +33,10 @@ router.get('/reviewList', async (req, res) => {
           attributes: ['movie_title'],
         },
         {
+          model: Movie,
+          attributes: ['movie_no'],
+        },
+        {
           model: Rating,
           attributes: ['rating_score'],
         },
@@ -47,4 +51,54 @@ router.get('/reviewList', async (req, res) => {
     console.error('에러:', err);
   }
 });
+
+router.get('/reviewDetail/:boardNo', async (req, res) => {
+  let boardNo = Number(req.params.boardNo);
+  console.log('게시글 번호 : ' + boardNo);
+  try {
+    const reviewDetailResult = await Board.findOne({
+      where: {
+        board_no: boardNo,
+      },
+      include: [
+        {
+          model: Movie,
+          attributes: ['movie_title'],
+        },
+        {
+          model: User,
+          attributes: ['user_name'],
+        },
+        {
+          model: Rating,
+          attributes: ['rating_score'],
+        },
+      ],
+    });
+    res.status(200).json({
+      message: 'get reviewDetail successfully',
+      reviewDetail: reviewDetailResult,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get('/userReviewList/:userNo', async (req, res) => {
+  let { userNo } = Number(req.params.userNo);
+  try {
+    const userReviewResult = await Board.findAll({
+      where: {
+        user_no: userNo,
+      },
+    });
+    res.status(200).json({
+      message: 'get userReviewList successfully',
+      userReviewResult,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 module.exports = router;
