@@ -1,5 +1,6 @@
 .main_container {
   position: relative;
+  box-sizing: border-box;
 }
 
 .top_bar {
@@ -32,5 +33,6 @@
 }
 
 .main_content {
-  margin: 0 260px;
+  margin: 0 360px;
+  margin-bottom: 100px;
 }

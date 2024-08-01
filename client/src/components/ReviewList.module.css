@@ -50,3 +50,9 @@
   color: white;
   font-size: 18px;
 }
+
+.go_movieDetail,
+.go_reviewDetail {
+  color: white;
+  text-decoration-line: none;
+}

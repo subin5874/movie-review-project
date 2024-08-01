@@ -10,7 +10,7 @@
 }
 
 .movie_rating {
-  color: #ffea31;
+  color: #fbb900;
   font-size: 50px;
 }
 
@@ -35,7 +35,7 @@
 .movie_review {
   color: white;
   font-size: 18px;
-  height: 350px;
+  height: 330px;
 }
 
 .review_box_bottom {

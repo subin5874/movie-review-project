@@ -1,11 +1,3 @@
-.search_container {
-  display: inline-block;
-  position: absolute;
-  top: 70%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .search_container__Home {
   display: inline-block;
   position: absolute;
@@ -19,7 +11,12 @@
   margin-top: 110px;
 }
 
-.search_container > span {
+.search_container__Home > span {
+  color: white;
+  font-size: 32px;
+}
+
+.search_container__MovieSearch > span {
   color: white;
   font-size: 32px;
 }
