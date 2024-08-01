@@ -1,37 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './ReviewList.module.css';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { formatCreatedAt } from '../utils/formatCreatedAt';
+import { formatRating } from '../utils/formatRating.js';
 
 function ReviewList() {
-  const [reviewList, setReviewList] = useState([
-    {
-      title: '웡카',
-      online_review: '정말 재밌어요',
-      rating: '★★★★★',
-      name: '수달',
-      date: '2010-10-02',
-    },
-    {
-      title: '인사이드 아웃2',
-      online_review: '정말 감동의 물결 가득~',
-      rating: '★★★★',
-      name: '수달',
-      date: '2010-10-02',
-    },
-    {
-      title: '피라냐',
-      online_review: '내용이 너무너무 구려요',
-      rating: '★',
-      name: '수달',
-      date: '2010-10-02',
-    },
-  ]);
+  const [reviewList, setReviewList] = useState([]);
+
+  useEffect(() => {
+    let results = [];
+    axios
+      .get('http://localhost:3003/board/reviewList')
+      .then((res) => {
+        results = res.data.reviewList;
+        const updatedReviewList = results.map((results) => {
+          return {
+            ...results,
+            createdAt: formatCreatedAt(results.createdAt),
+            rating_score: formatRating(results.Rating.rating_score),
+          };
+        });
+        setReviewList(updatedReviewList);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <div className={styles.reviewList_container}>
       <span>영화 후기</span>
       <div className={styles.top_box}>
         <span>12개의 글</span>
-        <Link to="/" className={styles.go_reviewList}>
+        <Link to="/movieReview" className={styles.go_reviewList}>
           전체보기
         </Link>
       </div>
@@ -49,30 +51,36 @@ function ReviewList() {
           {reviewList &&
             reviewList.map((data, i) => {
               return (
-                <tr>
+                <tr key={i}>
                   <td className={styles.movie_title}>
-                    <div>
-                      <span>{data.title}</span>
-                    </div>
+                    <Link
+                      to={`/movieDetail/${data.Movie.movie_no}`}
+                      className={styles.go_movieDetail}
+                    >
+                      {data.Movie.movie_title}
+                    </Link>
                   </td>
                   <td className={styles.movie_one_line_review}>
-                    <div>
-                      <span>{data.online_review}</span>
-                    </div>
+                    <Link
+                      to={`/reviewDetail/${data.board_no}`}
+                      className={styles.go_reviewDetail}
+                    >
+                      {data.board_one_line_review}
+                    </Link>
                   </td>
                   <td className={styles.movie_rating}>
                     <div>
-                      <span>{data.rating}</span>
+                      <span>{data.rating_score}</span>
                     </div>
                   </td>
                   <td className={styles.movie_userName}>
                     <div>
-                      <span>{data.name}</span>
+                      <span>{data.User.user_name}</span>
                     </div>
                   </td>
                   <td className={styles.movie_date}>
                     <div>
-                      <span>{data.date}</span>
+                      <span>{data.createdAt}</span>
                     </div>
                   </td>
                 </tr>
