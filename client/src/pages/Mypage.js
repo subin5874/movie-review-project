@@ -2,9 +2,11 @@ import React from 'react';
 import styles from './Mypage.module.css';
 import Navbar from '../components/Navbar';
 import MovieTaste from '../components/MovieTaste';
-import MovieList from '../components/MovieList';
+import { useSelector } from 'react-redux';
+import UserMovieList from '../components/UserMovieList';
 
 function Mypage() {
+  const user = useSelector((state) => state.auth.user);
   return (
     <div className={styles.main_container}>
       <div className={styles.top_bar}>
@@ -12,11 +14,11 @@ function Mypage() {
       </div>
       <div className={styles.main_content}>
         <div className={styles.userInfo_box}>
-          <span>닉네임</span>
+          <span>{user.name}</span>
         </div>
         <div className={styles.content_flex}>
           <MovieTaste />
-          <MovieList />
+          <UserMovieList />
         </div>
       </div>
     </div>
