@@ -54,7 +54,6 @@ router.get('/reviewList', async (req, res) => {
 
 router.get('/reviewDetail/:boardNo', async (req, res) => {
   let boardNo = Number(req.params.boardNo);
-  console.log('게시글 번호 : ' + boardNo);
   try {
     const reviewDetailResult = await Board.findOne({
       where: {
@@ -85,7 +84,7 @@ router.get('/reviewDetail/:boardNo', async (req, res) => {
 });
 
 router.get('/userReviewList/:userNo', async (req, res) => {
-  let { userNo } = Number(req.params.userNo);
+  let userNo = Number(req.params.userNo);
   try {
     const userReviewResult = await Board.findAll({
       where: {
