@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Board, User, Movie, Rating } = require('../models/');
+const { where } = require('sequelize');
 
 router.post('/writeBoard', async (req, res) => {
   const { board_one_line_review, board_content, user_no, movie_no } = req.body;
@@ -17,6 +18,46 @@ router.post('/writeBoard', async (req, res) => {
     });
   } catch (err) {
     console.error('에러:', err);
+  }
+});
+
+router.post('/modifyBoard/:boardNo', async (req, res) => {
+  const { board_one_line_review, board_content } = req.body;
+  let boardNo = Number(req.params.boardNo);
+  try {
+    const modifyReviewResult = await Board.update(
+      {
+        board_one_line_review: board_one_line_review,
+        board_content: board_content,
+      },
+      {
+        where: {
+          board_no: boardNo,
+        },
+      }
+    );
+    res.status(201).json({
+      message: 'Board modify successfully',
+      board_no: modifyReviewResult.board_no,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.post('/deleteBoard/:boardNo', async (req, res) => {
+  let boardNo = Number(req.params.boardNo);
+  try {
+    const deleteReviewResult = await Board.destroy({
+      where: {
+        board_no: boardNo,
+      },
+    });
+    res.status(201).json({
+      message: 'Board Delete successfully',
+    });
+  } catch (err) {
+    console.error(err);
   }
 });
 
