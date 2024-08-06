@@ -57,7 +57,7 @@ function MovieInfo() {
   const navigate = useNavigate();
 
   const onWriteReviewBtn = () => {
-    navigate('/writeReview', { state: movieNo });
+    navigate('/writeReview', { state: { movieNo: movieNo } });
   };
 
   return (
