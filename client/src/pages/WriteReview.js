@@ -6,7 +6,15 @@ import { useLocation } from 'react-router-dom';
 
 function WriteReview() {
   const location = useLocation();
-  const movieNo = location.state;
+  let movieNo = null;
+  let boardNo = null;
+
+  console.log('location: ' + JSON.stringify(location.state));
+  if (location.state.movieNo) {
+    movieNo = location.state.movieNo;
+  } else if (location.state.boardNo) {
+    boardNo = location.state.boardNo;
+  }
 
   return (
     <div className={styles.writeReview_contaier}>
@@ -14,7 +22,11 @@ function WriteReview() {
         <Navbar />
       </div>
       <div className={styles.main_content}>
-        <WriteForm movieNo={movieNo} />
+        {movieNo ? (
+          <WriteForm movieNo={movieNo} />
+        ) : (
+          boardNo && <WriteForm boardNo={boardNo} />
+        )}
       </div>
     </div>
   );
