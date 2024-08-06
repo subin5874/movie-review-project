@@ -5,11 +5,14 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { formatCreatedAt } from '../utils/formatCreatedAt';
 import { formatRating } from '../utils/formatRating';
+import { useNavigate } from 'react-router-dom';
 
 function ReviewDetail() {
   const { boardNo } = useParams();
   console.log(boardNo);
   const [reviewDate, setReviewData] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     let results = [];
@@ -35,9 +38,22 @@ function ReviewDetail() {
 
   const onModifyBtn = () => {
     console.log('수정');
+    navigate('/writeReview', { state: { boardNo: boardNo } });
   };
   const onDeleteBtn = () => {
-    console.log('삭제');
+    if (window.confirm('후기를 삭제하시겠습니까?') == true) {
+      axios
+        .post('http://localhost:3003/board/deleteBoard/' + boardNo)
+        .then((res) => {
+          console.log(res.data.message);
+          navigate(-1);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      return false;
+    }
   };
   return (
     <div className={styles.main_container}>
