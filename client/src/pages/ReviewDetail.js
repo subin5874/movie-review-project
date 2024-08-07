@@ -6,10 +6,13 @@ import axios from 'axios';
 import { formatCreatedAt } from '../utils/formatCreatedAt';
 import { formatRating } from '../utils/formatRating';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 function ReviewDetail() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
+
   const { boardNo } = useParams();
-  console.log(boardNo);
   const [reviewDate, setReviewData] = useState([]);
 
   const navigate = useNavigate();
@@ -20,7 +23,6 @@ function ReviewDetail() {
       .get('http://localhost:3003/board/reviewDetail/' + boardNo)
       .then((res) => {
         results = res.data.reviewDetail;
-        console.log('result' + results);
         setReviewData(results);
         setReviewData((reviewDate) => {
           return {
@@ -29,7 +31,6 @@ function ReviewDetail() {
             rating_score: formatRating(results.Rating.rating_score),
           };
         });
-        console.log(reviewDate);
       })
       .catch((err) => {
         console.error(err);
@@ -79,14 +80,22 @@ function ReviewDetail() {
             <span>{reviewDate.User?.user_name || '작성자'}</span>
             <span>{reviewDate.createdAt}</span>
           </div>
-          <div className={styles.modify_btn_box}>
-            <button onClick={onModifyBtn} className={styles.modify_btn}>
-              수정
-            </button>
-            <button onClick={onDeleteBtn} className={styles.modify_btn}>
-              삭제
-            </button>
-          </div>
+          {isAuthenticated ? (
+            user.no === reviewDate.User?.user_no ? (
+              <div className={styles.modify_btn_box}>
+                <button onClick={onModifyBtn} className={styles.modify_btn}>
+                  수정
+                </button>
+                <button onClick={onDeleteBtn} className={styles.modify_btn}>
+                  삭제
+                </button>
+              </div>
+            ) : (
+              ''
+            )
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>
