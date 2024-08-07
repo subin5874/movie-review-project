@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './MovieSearch.module.css';
 import Navbar from '../components/Navbar';
 import SearchBar from '../components/SearchBar';
 import MovieList from '../components/MovieList';
+import { useLocation } from 'react-router-dom';
 
 function MovieSearch() {
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [initialSearchKeyword, setInitialSearchKeyword] = useState('');
+
+  const location = useLocation();
+  useEffect(() => {
+    setSearchKeyword(location.state);
+    setInitialSearchKeyword(location.state);
+  }, [location]);
 
   const searchSubmit = (keyword) => {
-    setSearchKeyword(keyword);
+    if (keyword !== initialSearchKeyword) {
+      setSearchKeyword(keyword);
+    }
   };
 
   return (
