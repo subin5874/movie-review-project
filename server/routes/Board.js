@@ -107,6 +107,10 @@ router.get('/reviewDetail/:boardNo', async (req, res) => {
         },
         {
           model: User,
+          attributes: ['user_no'],
+        },
+        {
+          model: User,
           attributes: ['user_name'],
         },
         {
