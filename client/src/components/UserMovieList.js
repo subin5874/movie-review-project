@@ -62,7 +62,11 @@ function UserMovieList() {
 
   return (
     <div className={styles.userMovieList_container}>
-      <span className={styles.movieList_title}>내가 작성한 영화 후기</span>
+      <span className={styles.movieList_title}>
+        {movieList && movieList.length > 0
+          ? '내가 작성한 영화 후기'
+          : '아직 작성한 영화 후기가 없습니다'}
+      </span>
       <div className={styles.movieList_box}>
         {movieList &&
           movieList.map((data, i) => {
