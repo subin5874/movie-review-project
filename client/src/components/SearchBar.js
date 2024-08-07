@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './SearchBar.module.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ function SearchBar({ onSearch }) {
   const navigate = useNavigate();
 
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [submittedKeyword, setSubmittedKeyword] = useState('');
 
   const InputChange = (e) => {
     setSearchKeyword(e.target.value);
@@ -14,10 +15,13 @@ function SearchBar({ onSearch }) {
 
   const searchSubmit = (e) => {
     e.preventDefault();
-    if (pathName === '/') navigate('/movieSearch');
-
-    console.log('검색어:', searchKeyword);
-    onSearch(searchKeyword);
+    if (pathName === '/') {
+      navigate('/movieSearch', { state: searchKeyword });
+      console.log('홈에서 검색 작동: ' + searchKeyword);
+    } else {
+      onSearch(searchKeyword);
+    }
+    setSubmittedKeyword(searchKeyword);
   };
 
   let divClassName;
@@ -29,8 +33,8 @@ function SearchBar({ onSearch }) {
 
   return (
     <div className={divClassName}>
-      {searchKeyword ? (
-        <span> "{searchKeyword}"의 검색결과입니다 </span>
+      {submittedKeyword ? (
+        <span> "{submittedKeyword}"의 검색결과입니다 </span>
       ) : (
         <span>Search Movie Title</span>
       )}
