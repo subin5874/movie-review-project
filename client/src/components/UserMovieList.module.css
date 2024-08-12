@@ -15,6 +15,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   box-sizing: border-box;
+  gap: 20px;
 }
 
 .moviePoster_box {
@@ -29,9 +30,14 @@
 }
 
 .movie_box {
-  flex: 0 0 32%; /* 한 줄에 3개의 박스를 배치*/
+  flex: 0 0 calc(33.333% - 20px); /* 한 줄에 3개의 박스를 배치*/
   box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기를 계산 */
   margin-bottom: 20px;
+}
+
+.movieList_box:after {
+  content: '';
+  flex: auto;
 }
 
 .movie_poster {

@@ -18,6 +18,11 @@
   box-sizing: border-box;
 }
 
+.movieList_box:after {
+  content: '';
+  flex: auto;
+}
+
 .moviePoster_box {
   width: 100%;
   padding-bottom: 150%;
