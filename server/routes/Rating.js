@@ -44,4 +44,21 @@ router.post('/modifyRating/:boardNo', async (req, res) => {
   }
 });
 
+router.get('/getRatings/:userNo', async (req, res) => {
+  let userNo = Number(req.params.userNo);
+  try {
+    const getUserRatings = await Rating.findAll({
+      where: {
+        user_no: userNo,
+      },
+    });
+    res.status(200).json({
+      message: 'get Rating successfully',
+      ratings: getUserRatings,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 module.exports = router;
