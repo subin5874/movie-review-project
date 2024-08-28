@@ -44,6 +44,8 @@ function WriteForm(props) {
           console.log(result);
           setReviewData(result);
           setSelectedRating(result.Rating.rating_score);
+          setOneLineReview(result.board_one_line_review);
+          setReview(result.board_content);
         } catch (err) {
           console.error(err);
         }
@@ -58,11 +60,6 @@ function WriteForm(props) {
   };
   const onReview = (e) => {
     setReview(e.target.value);
-  };
-
-  const onClickRating = (event) => {
-    const value = event.target.value;
-    setSelectedRating(value);
   };
 
   const submitWriteForm = (e) => {
