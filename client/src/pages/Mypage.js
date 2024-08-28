@@ -14,7 +14,7 @@ function Mypage() {
       </div>
       <div className={styles.main_content}>
         <div className={styles.userInfo_box}>
-          <span>{user.name}</span>
+          <span>{user.name} 님</span>
         </div>
         <div className={styles.content_flex}>
           <MovieTaste />
