@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styles from './ReviewList.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { formatCreatedAt } from '../utils/formatCreatedAt';
 import { formatRating } from '../utils/formatRating.js';
 
 function ReviewList() {
   const [reviewList, setReviewList] = useState([]);
+
+  const pathName = useLocation().pathname;
 
   useEffect(() => {
     let results = [];
@@ -21,7 +23,12 @@ function ReviewList() {
             rating_score: formatRating(results.Rating.rating_score),
           };
         });
-        setReviewList(updatedReviewList);
+        if (pathName == '/') {
+          const slicedReviewList = updatedReviewList.slice(0, 5);
+          setReviewList(slicedReviewList);
+        } else {
+          setReviewList(updatedReviewList);
+        }
       })
       .catch((err) => {
         console.log(err);
