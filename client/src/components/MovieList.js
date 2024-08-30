@@ -58,10 +58,7 @@ function MovieList({ searchKeyword }) {
 
   //페이지에 따른 리스트 타이틀 변경
   useEffect(() => {
-    if (pathName === '/mypage') {
-      setMovieListClassName(styles.movieList_container_mypage);
-      setMovieListTitle('내가 작성한 영화 후기');
-    } else if (searchKeyword) {
+    if (searchKeyword) {
       setMovieListTitle('');
     } else if (pathName === '/movieSearch') {
       setMovieListTitle('인기있는 영화');
@@ -80,6 +77,7 @@ function MovieList({ searchKeyword }) {
               <Link
                 to={`/movieDetail/${data.id}`}
                 className={styles.go_movieDetail}
+                key={i}
               >
                 <div className={styles.movie_box}>
                   <div className={styles.moviePoster_box}>
