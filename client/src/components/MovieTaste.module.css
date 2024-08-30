@@ -2,18 +2,25 @@
   width: 30%;
 }
 
-.movieGenre_box {
+.movieGenre_box,
+.ratingDoughnutChart_box {
   text-align: left;
 }
 
-.movieGenre_box > span {
+.movieGenre_box,
+.ratingDoughnutChart_box > span {
   color: white;
-  font-size: 20px;
+  font-size: 19px;
   font-weight: 600;
+}
+
+.ratingDoughnutChart_box {
+  margin-bottom: 60px;
 }
 
 .movieGenre_list > li {
   color: white;
   font-size: 20px;
   margin-left: -15px;
+  font-weight: 100;
 }

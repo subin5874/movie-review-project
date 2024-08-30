@@ -46,9 +46,10 @@
   height: 50px;
 }
 
-.tbody > tr > td > div > span {
+.tbody > tr > td > div > span,
+.tbody > tr > td > a {
   color: white;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .go_movieDetail,
