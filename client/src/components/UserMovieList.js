@@ -34,14 +34,11 @@ function UserMovieList() {
   }, []);
 
   useEffect(() => {
-    console.log(mList);
     let UpdatemovieList = [];
     const fetchMovies = async () => {
       try {
         for (const data of mList) {
-          console.log('MNO: ' + data.movie_no);
           const results = await getMovieDetails(data.movie_no);
-          console.log(results);
           UpdatemovieList.push({
             ...results,
             poster_path: formatPosterPath(results.poster_path),
@@ -55,10 +52,6 @@ function UserMovieList() {
     };
     fetchMovies();
   }, [mList]);
-
-  useEffect(() => {
-    console.log(movieList);
-  }, [movieList]);
 
   return (
     <div className={styles.userMovieList_container}>
