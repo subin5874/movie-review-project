@@ -56,21 +56,31 @@ function MovieTaste() {
     setMovieGenre(userMovieData);
   }, [movieData]);
 
-  // useEffect(() => {
-  //genre 갯수 비교
-  //같으면 상위에서 가져오기
-  //   console.log(movieGenre);
-  //   const userMovieTaste = async () => {
-  //     try {
-  //       movieGenre.genres.map((data, index) => {
-  //         console.log(data);
-  //       });
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-  //   userMovieTaste();
-  // }, [movieGenre]);
+  useEffect(() => {
+    const genreCount = {};
+
+    //배열 순회하면서 장르의 출현 빈도 계산
+    if (Array.isArray(movieGenre.genres)) {
+      movieGenre.genres.forEach((genre) => {
+        console.log(genre);
+        if (genreCount[genre.name]) {
+          genreCount[genre.name]++;
+        } else {
+          genreCount[genre.name] = 1;
+        }
+      });
+
+      //결과를 빈도순으로 정렬
+      const sortedGenres = Object.entries(genreCount).sort(
+        (a, b) => b[1] - a[1]
+      );
+
+      //많이 등장한 두 개 장르 추출
+      const topTwoGenres = sortedGenres.slice(0, 2).map((genre) => genre[0]);
+
+      setMovieTaste(topTwoGenres);
+    }
+  }, [movieGenre]);
 
   useEffect(() => {
     console.log(movieGenre);
@@ -85,8 +95,9 @@ function MovieTaste() {
       <div className={styles.movieGenre_box}>
         <span>선호하는 영화 장르</span>
         <ul className={styles.movieGenre_list}>
-          <li>애니메이션</li>
-          <li>SF</li>
+          {movieTaste.map((data) => {
+            return <li>{data}</li>;
+          })}
         </ul>
       </div>
     </div>
