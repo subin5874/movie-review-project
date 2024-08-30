@@ -1,7 +1,3 @@
-.movieList_container_mypage {
-  width: 70%;
-}
-
 .movieList_title {
   color: white;
   display: flex;
@@ -49,6 +45,11 @@
   position: absolute;
   top: 0;
   left: 0;
+}
+
+.movie_poster:hover {
+  width: 103%;
+  height: 103%;
 }
 
 .movie_box > span {
