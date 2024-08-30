@@ -1,11 +1,11 @@
 .main_content {
   margin: 0 320px;
-  margin-top: 110px;
+  margin-top: 90px;
 }
 
 .userInfo_box {
   text-align: left;
-  margin-bottom: 70px;
+  margin-bottom: 40px;
 }
 
 .userInfo_box > span {
