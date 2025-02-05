@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require('../services/jwtService');
+const authController = require('../controllers/authController');
 const { User } = require('../models/');
 
 router.post('/signup', async (req, res) => {
@@ -36,21 +41,33 @@ router.post('/login', async (req, res) => {
     if (user) {
       const isMatch = await bcrypt.compare(password, user.user_password);
       if (isMatch) {
-        res.status(200).json({
-          message: '로그인 성공',
-          user: { no: user.user_no, id: user.user_id, name: user.user_name },
-        });
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+        return res
+          .status(200)
+          .cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: false,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+          })
+          .header('Authorization', `Bearer ${accessToken}`)
+          .json({
+            message: '로그인 성공',
+            user: { no: user.user_no, id: user.user_id, name: user.user_name },
+          });
       } else {
-        res.status(401).json({ error: '비밀번호 불일치' });
+        return res.status(401).json({ error: '비밀번호 불일치' });
       }
     } else {
-      res.status(401).json({ error: '사용자 없음' });
+      return res.status(401).json({ error: '사용자 없음' });
     }
   } catch (err) {
-    res.status(500).json({ error: 'Server Error' });
     console.error(err);
+    return res.status(500).json({ error: 'Server Error' });
   }
 });
+
+router.post('/logout', authController.logout);
 
 router.get('/checkUserName', async (req, res) => {
   const userName = req.query.userName;
