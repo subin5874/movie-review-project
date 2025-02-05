@@ -2,10 +2,20 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const db = require('./models');
-//const session = require('express-session');
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    exposedHeaders: ['Authorization'],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
-app.use(cors());
 
 //Routers
 const userRouter = require('./routes/User');
