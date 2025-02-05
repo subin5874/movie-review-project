@@ -15,18 +15,30 @@ function Login() {
   const onLogin = (data) => {
     console.log('로그인 id: ', data.id, ', paw: ', data.password);
     axios
-      .post('http://localhost:3003/user/login', {
-        id: data.id,
-        password: data.password,
-      })
+      .post(
+        'http://localhost:3003/user/login',
+        {
+          id: data.id,
+          password: data.password,
+        },
+        { withCredentials: true }
+      )
       .then((res) => {
-        console.log(res.data);
-        const user = res.data.user;
-        dispatch(loginSuccess(user));
-        navigate('/');
+        const { user } = res.data;
+        if (res.headers['authorization']) {
+          const accessToken = res.headers['authorization'].replace(
+            'Bearer ',
+            ''
+          );
+
+          localStorage.setItem('accessToken', accessToken);
+
+          dispatch(loginSuccess(user));
+          navigate('/');
+        }
       })
       .catch((err) => {
-        console.error(err);
+        console.error('로그인 실패', err);
       });
   };
   return (
