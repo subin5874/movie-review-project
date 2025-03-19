@@ -13,7 +13,6 @@ function Login() {
   const dispatch = useDispatch();
 
   const onLogin = (data) => {
-    console.log('로그인 id: ', data.id, ', paw: ', data.password);
     axios
       .post(
         'http://localhost:3003/user/login',
