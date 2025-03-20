@@ -11,8 +11,12 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ReviewDetail from './pages/ReviewDetail';
 import Mypage from './pages/Mypage';
+import useCheckAccessToken from './services/authService';
 
 function App() {
+  //AccessToken, RefreshToken 검증 테스트 코드
+  useCheckAccessToken();
+
   return (
     <div className="App">
       <BrowserRouter>
