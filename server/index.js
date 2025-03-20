@@ -26,6 +26,8 @@ const boardRouter = require('./routes/Board');
 app.use('/board', boardRouter);
 const ratingRouter = require('./routes/Rating');
 app.use('/rating', ratingRouter);
+const authRouter = require('./routes/Auth');
+app.use('/auth', authRouter);
 
 db.sequelize.sync().then(() => {
   app.listen(3003, () => {
