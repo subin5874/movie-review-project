@@ -3,17 +3,18 @@ import styles from './WriteReview.module.css';
 import Navbar from '../components/Navbar';
 import WriteForm from '../components/WriteForm';
 import { useLocation } from 'react-router-dom';
+import PostCreate from '../components/PostCreate';
+import PostEdit from '../components/PostEdit';
 
 function WriteReview() {
   const location = useLocation();
-  let movieNo = null;
-  let boardNo = null;
+  let movieInfo = null;
+  let reviewInfo = null;
 
-  console.log('location: ' + JSON.stringify(location.state));
-  if (location.state.movieNo) {
-    movieNo = location.state.movieNo;
-  } else if (location.state.boardNo) {
-    boardNo = location.state.boardNo;
+  if (location.state.movieInfo) {
+    movieInfo = location.state.movieInfo;
+  } else if (location.state.reviewDate) {
+    reviewInfo = location.state.reviewDate;
   }
 
   return (
@@ -22,10 +23,10 @@ function WriteReview() {
         <Navbar />
       </div>
       <div className={styles.main_content}>
-        {movieNo ? (
-          <WriteForm movieNo={movieNo} />
+        {movieInfo ? (
+          <PostCreate movieInfo={movieInfo} />
         ) : (
-          boardNo && <WriteForm boardNo={boardNo} />
+          reviewInfo && <PostEdit reviewInfo={reviewInfo} />
         )}
       </div>
     </div>
