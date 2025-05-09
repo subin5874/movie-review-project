@@ -6,6 +6,7 @@ const {
   generateAccessToken,
 } = require('../services/jwtService');
 
+//accessToken 검증
 router.post('/validate/accesstoken', (req, res) => {
   try {
     const accessToken = req.headers['authorization'];
@@ -21,30 +22,24 @@ router.post('/validate/accesstoken', (req, res) => {
     console.log(err.name);
     if (err.name === 'TokenExpiredError') {
       console.log('at가 만료되었습니다');
-      res.status(401).json({ message: 'accessToken이 만료되었습니다.' });
+      return res.status(401).json({ message: 'accessToken이 만료되었습니다.' });
     }
   }
 });
 
+//refreshToken 검증
 router.post('/validate/refreshtoken', (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      return res.status(401).json({ message: 'Refresh Token is missing' }); // 토큰이 없을 때
+      return res.status(401).json({ message: 'Refresh Token is missing' });
     }
 
     const decoded = verifyRefreshToken(refreshToken);
-    console.log(decoded);
 
     if (!decoded) {
-      return res.status(500).json({ message: 'Token verification failed' });
-    }
-
-    if (decoded === 'expired') {
-      return res.status(401).json({ message: 'Refresh Token expired' }); // 만료된 토큰
-    } else if (decoded === 'invalid') {
-      return res.status(401).json({ message: 'Invalid Refresh Token' }); // 잘못된 토큰
+      return res.status(401).json({ message: 'Token verification failed' });
     }
 
     //토큰이 유효할 때
@@ -58,8 +53,13 @@ router.post('/validate/refreshtoken', (req, res) => {
       .header('Authorization', `Bearer ${accessToken}`)
       .json({ message: 'Refresh Token is valid' });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: 'Refresh Token expired' }); // 만료된 토큰
+    } else if (err.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: 'Invalid Refresh Token' }); // 잘못된 토큰
+    } else {
+      console.log('알 수 없는 오류');
+    }
   }
 });
 
