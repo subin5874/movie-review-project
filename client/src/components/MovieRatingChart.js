@@ -32,11 +32,9 @@ function MovieRatingChart() {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    console.log('별점 데이터 가져오기');
     axios
       .get('http://localhost:3003/rating/getRatings/' + user.no)
       .then((res) => {
-        console.log(res.data.ratings);
         const ratings = res.data.ratings;
         const ratingCounts = [0, 0, 0, 0, 0];
 
@@ -47,7 +45,6 @@ function MovieRatingChart() {
         });
 
         const maxRatingCount = Math.max(...ratingCounts);
-        console.log(ratingCounts);
         const maxRatingIndex = ratingCounts.indexOf(maxRatingCount);
         setMaxRatingCount(maxRatingIndex + 1);
 

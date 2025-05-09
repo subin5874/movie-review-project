@@ -5,8 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getMovieDetails } from '../api/movieDetails';
 import { getReleaseDates } from '../api/movieReleaseDates.js';
 import { formatPosterPath } from '../utils/formatPosterPath';
+import { useSelector } from 'react-redux';
 
 function MovieInfo() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const { movieNo } = useParams();
   const [movieInfo, setMovieInfo] = useState([]);
 
@@ -29,7 +31,6 @@ function MovieInfo() {
       }
     };
     fetchMovies();
-    console.log(movieInfo);
   }, [movieNo]);
 
   useEffect(() => {
@@ -43,7 +44,6 @@ function MovieInfo() {
       let cert = movieInfo.releaseDates.release_dates[0].certification;
       const match = cert.match(/(\d+)/);
       if (match) {
-        console.log(match);
         setCertification(match[0] + '세 이상 관람가');
       } else if (cert === 'ALL' || cert === 'All') {
         setCertification('ALL');
@@ -57,7 +57,11 @@ function MovieInfo() {
   const navigate = useNavigate();
 
   const onWriteReviewBtn = () => {
-    navigate('/writeReview', { state: { movieNo: movieNo } });
+    if (!isAuthenticated) {
+      window.alert('로그인 후 작성할 수 있습니다.');
+    } else {
+      navigate('/writeReview', { state: { movieInfo: movieInfo } });
+    }
   };
 
   return (

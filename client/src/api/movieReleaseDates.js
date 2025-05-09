@@ -16,7 +16,6 @@ export const getReleaseDates = async (movieNo) => {
     const krReleaseDates = response.data.results.find(
       (result) => result.iso_3166_1 === 'KR'
     );
-    console.log(krReleaseDates);
     return krReleaseDates;
   } catch (error) {
     console.error('Error fetching data:', error);

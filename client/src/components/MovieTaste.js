@@ -18,7 +18,6 @@ function MovieTaste() {
         .get('http://localhost:3003/board/userReviewList/' + user.no)
         .then((res) => {
           result = res.data.userReviewResult;
-          console.log(result);
           setMovieData(result);
         })
         .catch((err) => {
@@ -34,9 +33,6 @@ function MovieTaste() {
     const userMovieGenre = async () => {
       try {
         movieData.map(async (data, index) => {
-          console.log('장르 가져오기: ' + data.movie_no);
-          result = await getMovieDetails(data.movie_no);
-          console.log(result);
           if (result.genres) {
             result.genres.forEach((genreData) => {
               setMovieGenre((movieGenre) => ({
@@ -62,7 +58,6 @@ function MovieTaste() {
     //배열 순회하면서 장르의 출현 빈도 계산
     if (Array.isArray(movieGenre.genres)) {
       movieGenre.genres.forEach((genre) => {
-        console.log(genre);
         if (genreCount[genre.name]) {
           genreCount[genre.name]++;
         } else {
@@ -80,10 +75,6 @@ function MovieTaste() {
 
       setMovieTaste(topTwoGenres);
     }
-  }, [movieGenre]);
-
-  useEffect(() => {
-    console.log(movieGenre);
   }, [movieGenre]);
 
   return (
