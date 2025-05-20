@@ -37,7 +37,13 @@ function Login() {
         }
       })
       .catch((err) => {
-        console.error('로그인 실패', err);
+        if (err.response && err.response.status === 401) {
+          window.alert(
+            '아이디 또는 비밀번호가 잘못되었습니다. 아이디와 비밀번호를 정확히 입력해주세요.'
+          );
+        } else {
+          console.error('로그인 실패', err);
+        }
       });
   };
   return (
