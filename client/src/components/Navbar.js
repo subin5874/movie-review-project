@@ -1,14 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Navbar.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import logoutUser from '../services/logoutUtils';
+import { logoutAsync } from '../store/authSlice';
 
 function Navbar() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
 
   const onLogout = () => {
-    logoutUser();
+    try {
+      logoutUser();
+      dispatch(logoutAsync());
+    } catch (err) {
+      console.log('로그아웃 실패');
+    }
   };
 
   return (
