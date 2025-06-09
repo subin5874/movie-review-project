@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Board, User, Movie, Rating } = require('../models/');
 const { where } = require('sequelize');
+const validateToken = require('../middleware/authMiddleware');
 
 router.post('/writeBoard', async (req, res) => {
   const { board_one_line_review, board_content, user_no, movie_no } = req.body;
@@ -128,21 +129,33 @@ router.get('/reviewDetail/:boardNo', async (req, res) => {
   }
 });
 
-router.get('/userReviewList/:userNo', async (req, res) => {
-  let userNo = Number(req.params.userNo);
-  try {
-    const userReviewResult = await Board.findAll({
-      where: {
-        user_no: userNo,
-      },
-    });
-    res.status(200).json({
-      message: 'get userReviewList successfully',
-      userReviewResult,
-    });
-  } catch (err) {
-    console.error(err);
+router.get(
+  '/userReviewList/:userNo',
+  validateToken.validateAccessToken,
+  async (req, res) => {
+    let userNo = '';
+    try {
+      const userInfo = req.user;
+      userNo = userInfo.no;
+    } catch (err) {
+      console.log(err);
+      res.status(401).json({ message: 'AsseccToken 만료' });
+    }
+    try {
+      const userReviewResult = await Board.findAll({
+        where: {
+          user_no: userNo,
+        },
+      });
+      res.status(200).json({
+        message: 'get userReviewList successfully',
+        userReviewResult,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'DB를 받아오지 못함' });
+    }
   }
-});
+);
 
 module.exports = router;
