@@ -7,35 +7,49 @@ import { getMovieDetails } from '../api/movieDetails';
 import axios from 'axios';
 
 function UserMovieList() {
+  const accessToken = localStorage.getItem('accessToken');
   const user = useSelector((state) => state.auth.user);
   const [movieList, setMovieList] = useState([]);
   const [mList, setMList] = useState([]);
 
+  //DB에서 리뷰 리스트를 가져옴
   useEffect(() => {
     let results = [];
-    const fetchMovies = async () => {
-      axios
-        .get('http://localhost:3003/board/userReviewList/' + user.no)
-        .then((res) => {
-          results = res.data.userReviewResult;
-          const movieNoList = results.map((data) => {
-            return {
-              board_no: data.board_no,
-              movie_no: data.movie_no,
-            };
-          });
-          setMList(movieNoList);
-        })
-        .catch((err) => {
-          console.error(err);
+    const fetchUserReviews = async () => {
+      try {
+        const results1 = await axios.get(
+          'http://localhost:3003/board/userReviewList/' + user.no,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        results = results1.data.userReviewResult;
+        const movieNoList = results.map((data) => {
+          return {
+            board_no: data.board_no,
+            movie_no: data.movie_no,
+          };
         });
+        setMList(movieNoList);
+      } catch (err) {
+        if (err.response && err.response.status === 401) {
+          console.log('AT만료');
+        }
+        if (err.response && err.response.status === 500) {
+          console.log('DB 에러');
+        }
+        console.log(err);
+      }
     };
-    fetchMovies();
+    fetchUserReviews();
   }, []);
 
+  //가져온 리뷰리스트에서 포스터랑 영화 번호를 가져옴
   useEffect(() => {
     let UpdatemovieList = [];
-    const fetchMovies = async () => {
+    const fetchMovieInfo = async () => {
       try {
         for (const data of mList) {
           const results = await getMovieDetails(data.movie_no);
@@ -50,7 +64,7 @@ function UserMovieList() {
         console.error(err);
       }
     };
-    fetchMovies();
+    fetchMovieInfo();
   }, [mList]);
 
   return (
