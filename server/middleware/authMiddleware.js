@@ -1,8 +1,6 @@
 const { verifyAccessToken } = require('../services/jwtService');
 
 function validateAccessToken(req, res, next) {
-  console.log('검증 미들웨어 실행');
-
   const authorizationHeader = req.headers['authorization'];
   try {
     if (!authorizationHeader) {
