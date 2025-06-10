@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import styles from './UserMovieList.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { formatPosterPath } from '../utils/formatPosterPath';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getMovieDetails } from '../api/movieDetails';
-import axios from 'axios';
+import axiosInstance from '../api/axiosInstance';
+import logoutUser from '../services/logoutUtils';
+import { logoutAsync } from '../store/authSlice';
 
 function UserMovieList() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const accessToken = localStorage.getItem('accessToken');
   const user = useSelector((state) => state.auth.user);
   const [movieList, setMovieList] = useState([]);
   const [mList, setMList] = useState([]);
 
-  //DB에서 리뷰 리스트를 가져옴
+  //리뷰 리스트를 가져옴
   useEffect(() => {
     let results = [];
     const fetchUserReviews = async () => {
       try {
-        const results1 = await axios.get(
-          'http://localhost:3003/board/userReviewList/' + user.no,
+        const results1 = await axiosInstance.get(
+          '/board/userReviewList/' + user.no,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -35,10 +39,16 @@ function UserMovieList() {
         setMList(movieNoList);
       } catch (err) {
         if (err.response && err.response.status === 401) {
-          console.log('AT만료');
+          try {
+            logoutUser();
+            dispatch(logoutAsync());
+            navigate('/');
+          } catch (err) {
+            console.log(err);
+          }
         }
         if (err.response && err.response.status === 500) {
-          console.log('DB 에러');
+          console.log(err);
         }
         console.log(err);
       }
