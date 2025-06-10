@@ -44,14 +44,11 @@ router.post('/validate/refreshtoken', (req, res) => {
 
     //토큰이 유효할 때
     const user = {
-      no: decoded.no,
-      username: decoded.username,
+      user_no: decoded.no,
+      user_name: decoded.username,
     };
-    const accessToken = generateAccessToken(user);
-    return res
-      .status(200)
-      .header('Authorization', `Bearer ${accessToken}`)
-      .json({ message: 'Refresh Token is valid' });
+    const newAccessToken = generateAccessToken(user);
+    return res.status(200).json({ accessToken: newAccessToken });
   } catch (err) {
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({ message: 'Refresh Token expired' }); // 만료된 토큰
