@@ -4,15 +4,18 @@ import styles from './Navbar.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import logoutUser from '../services/logoutUtils';
 import { logoutAsync } from '../store/authSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onLogout = () => {
     try {
       logoutUser();
       dispatch(logoutAsync());
+      navigate('/');
     } catch (err) {
       console.log('로그아웃 실패');
     }
