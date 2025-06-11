@@ -1,17 +1,4 @@
-const { generateNewAccessToken } = require('../services/tokenService');
 const { verifyRefreshToken } = require('../services/jwtService');
-const redisClient = require('../config/redisClient');
-
-//Access Token 재발급
-const refreshAccessToken = async (req, res) => {
-  const { refreshToken } = req.body;
-  try {
-    const newAccessToken = await generateNewAccessToken(refreshToken);
-    res.status(200).json({ accessToken: newAccessToken });
-  } catch (err) {
-    res.status(403).json({ err: 'Invalid or expired refresh token' });
-  }
-};
 
 //로그아웃 시 JWT
 const logout = async (req, res) => {
@@ -35,4 +22,4 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = { refreshAccessToken, logout };
+module.exports = { logout };
