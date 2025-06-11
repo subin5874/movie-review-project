@@ -1,66 +1,78 @@
 const express = require('express');
 const router = express.Router();
 const { Board, User, Movie, Rating } = require('../models/');
-const { where } = require('sequelize');
 const validateToken = require('../middleware/authMiddleware');
 
-router.post('/writeBoard', async (req, res) => {
-  const { board_one_line_review, board_content, user_no, movie_no } = req.body;
-  try {
-    const writeBoardResult = await Board.create({
-      board_one_line_review: board_one_line_review,
-      board_content: board_content,
-      user_no: user_no,
-      movie_no: movie_no,
-    });
-    res.status(201).json({
-      message: 'Board created successfully',
-      board_no: writeBoardResult.board_no,
-    });
-  } catch (err) {
-    console.error('에러:', err);
-  }
-});
-
-router.post('/modifyBoard/:boardNo', async (req, res) => {
-  const { board_one_line_review, board_content } = req.body;
-  let boardNo = Number(req.params.boardNo);
-  try {
-    const modifyReviewResult = await Board.update(
-      {
+router.post(
+  '/writeBoard',
+  validateToken.validateAccessToken,
+  async (req, res) => {
+    const { board_one_line_review, board_content, movie_no } = req.body;
+    const userNo = req.user.no;
+    try {
+      const writeBoardResult = await Board.create({
         board_one_line_review: board_one_line_review,
         board_content: board_content,
-      },
-      {
+        user_no: userNo,
+        movie_no: movie_no,
+      });
+      res.status(201).json({
+        message: 'Board created successfully',
+        board_no: writeBoardResult.board_no,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
+router.post(
+  '/modifyBoard/:boardNo',
+  validateToken.validateAccessToken,
+  async (req, res) => {
+    const { board_one_line_review, board_content } = req.body;
+    let boardNo = Number(req.params.boardNo);
+    try {
+      const modifyReviewResult = await Board.update(
+        {
+          board_one_line_review: board_one_line_review,
+          board_content: board_content,
+        },
+        {
+          where: {
+            board_no: boardNo,
+          },
+        }
+      );
+      res.status(201).json({
+        message: 'Board modify successfully',
+        board_no: modifyReviewResult.board_no,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+);
+
+router.post(
+  '/deleteBoard/:boardNo',
+  validateToken.validateAccessToken,
+  async (req, res) => {
+    let boardNo = Number(req.params.boardNo);
+    try {
+      const deleteReviewResult = await Board.destroy({
         where: {
           board_no: boardNo,
         },
-      }
-    );
-    res.status(201).json({
-      message: 'Board modify successfully',
-      board_no: modifyReviewResult.board_no,
-    });
-  } catch (err) {
-    console.error(err);
+      });
+      res.status(201).json({
+        message: 'Board Delete successfully',
+      });
+    } catch (err) {
+      console.error(err);
+    }
   }
-});
-
-router.post('/deleteBoard/:boardNo', async (req, res) => {
-  let boardNo = Number(req.params.boardNo);
-  try {
-    const deleteReviewResult = await Board.destroy({
-      where: {
-        board_no: boardNo,
-      },
-    });
-    res.status(201).json({
-      message: 'Board Delete successfully',
-    });
-  } catch (err) {
-    console.error(err);
-  }
-});
+);
 
 router.get('/reviewList', async (req, res) => {
   try {
@@ -90,7 +102,7 @@ router.get('/reviewList', async (req, res) => {
       reviewList,
     });
   } catch (err) {
-    console.error('에러:', err);
+    console.error(err);
   }
 });
 
