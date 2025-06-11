@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ReviewDetail.module.css';
 import Navbar from '../components/Navbar';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { formatCreatedAt } from '../utils/formatCreatedAt';
 import { formatRating } from '../utils/formatRating';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import axiosInstance from '../api/axiosInstance';
 
 function ReviewDetail() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const user = useSelector((state) => state.auth.user);
+  const accessToken = localStorage.getItem('accessToken');
 
   const { boardNo } = useParams();
   const [reviewDate, setReviewData] = useState([]);
@@ -19,8 +20,8 @@ function ReviewDetail() {
 
   useEffect(() => {
     let results = [];
-    axios
-      .get('http://localhost:3003/board/reviewDetail/' + boardNo)
+    axiosInstance
+      .get('/board/reviewDetail/' + boardNo)
       .then((res) => {
         results = res.data.reviewDetail;
         setReviewData(results);
@@ -38,20 +39,25 @@ function ReviewDetail() {
   }, []);
 
   const onModifyBtn = () => {
-    console.log('수정');
     navigate('/writeReview', { state: { reviewDate: reviewDate } });
   };
-  const onDeleteBtn = () => {
+
+  const onDeleteBtn = async () => {
     if (window.confirm('후기를 삭제하시겠습니까?') == true) {
-      axios
-        .post('http://localhost:3003/board/deleteBoard/' + boardNo)
-        .then((res) => {
-          console.log(res.data.message);
-          navigate(-1);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      try {
+        await axiosInstance.post(
+          '/board/deleteBoard/' + boardNo,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+        navigate(-1);
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       return false;
     }

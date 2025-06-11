@@ -1,44 +1,55 @@
-import React from 'react';
-import axios from 'axios';
 import WriteForm from './WriteForm';
-import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axiosInstance from '../api/axiosInstance';
 
 export const PostCreate = () => {
   const localhost = useLocation();
   const navigate = useNavigate();
 
+  const accessToken = localStorage.getItem('accessToken');
   const { movieInfo } = localhost.state;
   const movieNo = movieInfo.id;
-  const user = useSelector((state) => state.auth.user);
 
   const submitWriteForm = async (formData) => {
     try {
-      const movieResponse = await axios.post(
-        'http://localhost:3003/movie/movieInfo',
+      const movieResponse = await axiosInstance.post(
+        '/movie/movieInfo',
         {
           movie_no: movieNo,
           movie_title: movieInfo.title,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
-      const reviewResponse = await axios.post(
-        'http://localhost:3003/board/writeBoard',
+      const reviewResponse = await axiosInstance.post(
+        '/board/writeBoard',
         {
           board_one_line_review: formData.oneLineReview,
           board_content: formData.review,
-          user_no: user.no,
           movie_no: movieNo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
-      const ratingResponse = await axios.post(
-        'http://localhost:3003/rating/writeRating',
+      const ratingResponse = await axiosInstance.post(
+        '/rating/writeRating',
         {
           rating_score: formData.selectedRating,
           board_no: reviewResponse.data.board_no,
           movie_no: movieNo,
-          user_no: user.no,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 

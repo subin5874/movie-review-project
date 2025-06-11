@@ -1,29 +1,39 @@
-import React from 'react';
-import axios from 'axios';
 import WriteForm from './WriteForm';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axiosInstance from '../api/axiosInstance';
 
 export const PostEdit = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const accessToken = localStorage.getItem('accessToken');
   const { reviewDate } = location.state;
   const boardNo = reviewDate.board_no;
 
   const submitWriteForm = async (formData) => {
     try {
-      const reviewResponse = await axios.post(
-        'http://localhost:3003/board/modifyBoard/' + boardNo,
+      const reviewResponse = await axiosInstance.post(
+        '/board/modifyBoard/' + boardNo,
         {
           board_one_line_review: formData.oneLineReview,
           board_content: formData.review,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
-      const ratingResponse = await axios.post(
-        'http://localhost:3003/rating/modifyRating/' + boardNo,
+      const ratingResponse = await axiosInstance.post(
+        '/rating/modifyRating/' + boardNo,
         {
           rating_score: formData.selectedRating,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
