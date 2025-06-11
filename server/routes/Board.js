@@ -133,14 +133,7 @@ router.get(
   '/userReviewList/:userNo',
   validateToken.validateAccessToken,
   async (req, res) => {
-    let userNo = '';
-    try {
-      const userInfo = req.user;
-      userNo = userInfo.no;
-    } catch (err) {
-      console.log(err);
-      res.status(401).json({ message: 'AsseccToken 만료' });
-    }
+    const userNo = req.user.no;
     try {
       const userReviewResult = await Board.findAll({
         where: {
