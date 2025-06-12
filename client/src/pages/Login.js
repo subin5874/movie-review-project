@@ -1,10 +1,9 @@
-import React from 'react';
 import styles from './Login.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { loginSuccess } from '../store/authSlice';
 import { useDispatch } from 'react-redux';
+import axiosInstance from '../api/axiosInstance';
 
 function Login() {
   const { register, handleSubmit } = useForm();
@@ -13,9 +12,9 @@ function Login() {
   const dispatch = useDispatch();
 
   const onLogin = (data) => {
-    axios
+    axiosInstance
       .post(
-        'http://localhost:3003/user/login',
+        '/user/login',
         {
           id: data.id,
           password: data.password,

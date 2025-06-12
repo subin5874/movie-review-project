@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import styles from './MovieRatingChart.module.css';
+import axiosInstance from '../api/axiosInstance';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -32,8 +32,8 @@ function MovieRatingChart() {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3003/rating/getRatings/' + user.no)
+    axiosInstance
+      .get('/rating/getRatings/' + user.no)
       .then((res) => {
         const ratings = res.data.ratings;
         const ratingCounts = [0, 0, 0, 0, 0];

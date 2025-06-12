@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import styles from './Signup.module.css';
 import Navbar from '../components/Navbar';
-import axios from 'axios';
 import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../api/axiosInstance';
 
 function Signup() {
   const navigate = useNavigate();
@@ -41,15 +41,13 @@ function Signup() {
   }, [userName]);
 
   const checkUsername = async (userName) => {
-    console.log('확인 시작');
-    axios
-      .get('http://localhost:3003/user/checkUserName', {
+    axiosInstance
+      .get('/user/checkUserName', {
         params: {
           userName: userName,
         },
       })
       .then((res) => {
-        console.log('중복확인 결과:', res.data.isAvailable);
         setIsAvailableUserName(res.data.isAvailable);
       })
       .catch((err) => {
@@ -70,9 +68,8 @@ function Signup() {
   }, [id]);
 
   const checkID = async (id) => {
-    console.log('확인 시작');
-    axios
-      .get('http://localhost:3003/user/checkID', {
+    axiosInstance
+      .get('/user/checkID', {
         params: {
           id: id,
         },
@@ -90,8 +87,8 @@ function Signup() {
   };
 
   const onSignup = (data) => {
-    axios
-      .post('http://localhost:3003/user/signup', {
+    axiosInstance
+      .post('/user/signup', {
         userName: data.userName,
         id: data.id,
         password: data.password,
