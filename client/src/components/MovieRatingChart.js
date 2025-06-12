@@ -32,10 +32,13 @@ function MovieRatingChart() {
   const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    axiosInstance
-      .get('/rating/getRatings/' + user.no)
-      .then((res) => {
-        const ratings = res.data.ratings;
+    const fetchRating = async () => {
+      try {
+        const response = await axiosInstance.get(
+          '/rating/getRatings/' + user.no
+        );
+
+        const ratings = response.data.ratings;
         const ratingCounts = [0, 0, 0, 0, 0];
 
         ratings.forEach((rating) => {
@@ -67,12 +70,12 @@ function MovieRatingChart() {
             },
           ],
         };
-
         setChartData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching the ratings:', error);
-      });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchRating();
   }, []);
 
   const options = {
