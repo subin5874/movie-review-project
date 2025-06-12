@@ -11,40 +11,39 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const onLogin = (data) => {
-    axiosInstance
-      .post(
+  const onLogin = async (data) => {
+    try {
+      const response = await axiosInstance.post(
         '/user/login',
         {
           id: data.id,
           password: data.password,
         },
         { withCredentials: true }
-      )
-      .then((res) => {
-        const { user } = res.data;
-        if (res.headers['authorization']) {
-          const accessToken = res.headers['authorization'].replace(
-            'Bearer ',
-            ''
-          );
+      );
+      const user = response.data;
+      if (response.headers['authorization']) {
+        const accessToken = response.headers['authorization'].replace(
+          'Bearer ',
+          ''
+        );
 
-          localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('accessToken', accessToken);
 
-          dispatch(loginSuccess(user));
-          navigate('/');
-        }
-      })
-      .catch((err) => {
-        if (err.response && err.response.status === 401) {
-          window.alert(
-            '아이디 또는 비밀번호가 잘못되었습니다. 아이디와 비밀번호를 정확히 입력해주세요.'
-          );
-        } else {
-          console.error('로그인 실패', err);
-        }
-      });
+        dispatch(loginSuccess(user));
+        navigate('/');
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 401) {
+        window.alert(
+          '아이디 또는 비밀번호가 잘못되었습니다. 아이디와 비밀번호를 정확히 입력해주세요.'
+        );
+      } else {
+        console.error('로그인 실패', err);
+      }
+    }
   };
+
   return (
     <div className={styles.main_container}>
       <div className={styles.main_content}>
