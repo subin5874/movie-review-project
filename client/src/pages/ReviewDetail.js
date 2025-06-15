@@ -10,7 +10,7 @@ import axiosInstance from '../api/axiosInstance';
 
 function ReviewDetail() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const user = useSelector((state) => state.auth.user);
+  const userData = useSelector((state) => state.auth.user);
   const accessToken = localStorage.getItem('accessToken');
 
   const { boardNo } = useParams();
@@ -20,10 +20,12 @@ function ReviewDetail() {
 
   useEffect(() => {
     let results = [];
-    axiosInstance
-      .get('/board/reviewDetail/' + boardNo)
-      .then((res) => {
-        results = res.data.reviewDetail;
+    const fetchReview = async () => {
+      try {
+        const response = await axiosInstance.get(
+          '/board/reviewDetail/' + boardNo
+        );
+        results = response.data.reviewDetail;
         setReviewData(results);
         setReviewData((reviewDate) => {
           return {
@@ -32,10 +34,11 @@ function ReviewDetail() {
             rating_score: formatRating(results.Rating.rating_score),
           };
         });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchReview();
   }, []);
 
   const onModifyBtn = () => {
@@ -87,7 +90,7 @@ function ReviewDetail() {
             <span>{reviewDate.createdAt}</span>
           </div>
           {isAuthenticated ? (
-            user.no === reviewDate.User?.user_no ? (
+            userData.user.no == reviewDate.User?.user_no ? (
               <div className={styles.modify_btn_box}>
                 <button onClick={onModifyBtn} className={styles.modify_btn}>
                   수정
