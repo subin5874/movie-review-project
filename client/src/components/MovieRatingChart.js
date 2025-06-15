@@ -29,13 +29,13 @@ const centerText = {
 function MovieRatingChart() {
   const [chartData, setChartData] = useState(null);
   const [maxRatingCount, setMaxRatingCount] = useState('');
-  const user = useSelector((state) => state.auth.user);
+  const userData = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     const fetchRating = async () => {
       try {
         const response = await axiosInstance.get(
-          '/rating/getRatings/' + user.no
+          '/rating/getRatings/' + userData.user.no
         );
 
         const ratings = response.data.ratings;
