@@ -17,6 +17,7 @@ router.post('/validate/accesstoken', (req, res) => {
 
     const token = accessToken.split(' ')[1];
     const decoded = verifyAccessToken(token);
+    return res.status(200).json({ message: 'accessToken이 유효합니다.' });
   } catch (err) {
     console.log(err);
     console.log(err.name);
