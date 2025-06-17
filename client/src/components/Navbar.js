@@ -2,14 +2,27 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import logoutUser from '../services/logoutUtils';
+import logoutUser from '../services/authServices';
 import { logoutAsync } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import isTokensValid from '../api/authChecker';
 
 function Navbar() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const onMypage = async () => {
+    try {
+      await isTokensValid();
+      navigate('/mypage');
+    } catch (err) {
+      window.alert('로그인이 만료되었습니다.');
+      logoutUser();
+      dispatch(logoutAsync());
+      window.location.reload();
+    }
+  };
 
   const onLogout = () => {
     try {
@@ -41,9 +54,9 @@ function Navbar() {
         </li>
         {isAuthenticated ? (
           <li>
-            <Link to="/mypage" className={styles.nav_link}>
+            <button onClick={onMypage} className={styles.nav_btn}>
               마이페이지
-            </Link>
+            </button>
           </li>
         ) : (
           <li>

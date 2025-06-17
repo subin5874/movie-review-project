@@ -5,12 +5,16 @@ import { useParams } from 'react-router-dom';
 import { formatCreatedAt } from '../utils/formatCreatedAt';
 import { formatRating } from '../utils/formatRating';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axiosInstance from '../api/axiosInstance';
+import isTokensValid from '../api/authChecker';
+import logoutUser from '../services/authServices';
+import { logoutAsync } from '../store/authSlice';
 
 function ReviewDetail() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const userData = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
   const accessToken = localStorage.getItem('accessToken');
 
   const { boardNo } = useParams();
@@ -41,8 +45,16 @@ function ReviewDetail() {
     fetchReview();
   }, []);
 
-  const onModifyBtn = () => {
-    navigate('/writeReview', { state: { reviewDate: reviewDate } });
+  const onModifyBtn = async () => {
+    try {
+      await isTokensValid();
+      navigate('/writeReview', { state: { reviewDate: reviewDate } });
+    } catch (err) {
+      window.alert('로그인이 만료되었습니다.');
+      logoutUser();
+      dispatch(logoutAsync());
+      window.location.reload();
+    }
   };
 
   const onDeleteBtn = async () => {
