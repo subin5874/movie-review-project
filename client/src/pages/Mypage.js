@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import UserMovieList from '../components/UserMovieList';
 
 function Mypage() {
-  const user = useSelector((state) => state.auth.user);
+  const userData = useSelector((state) => state.auth.user);
   return (
     <div className={styles.main_container}>
       <div className={styles.top_bar}>
@@ -14,7 +14,7 @@ function Mypage() {
       </div>
       <div className={styles.main_content}>
         <div className={styles.userInfo_box}>
-          <span>{user.name} 님</span>
+          <span>{userData.user.name} 님</span>
         </div>
         <div className={styles.content_flex}>
           <MovieTaste />
