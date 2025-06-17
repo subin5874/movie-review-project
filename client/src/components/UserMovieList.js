@@ -5,7 +5,7 @@ import { formatPosterPath } from '../utils/formatPosterPath';
 import { Link, useNavigate } from 'react-router-dom';
 import { getMovieDetails } from '../api/movieDetails';
 import axiosInstance from '../api/axiosInstance';
-import logoutUser from '../services/logoutUtils';
+import logoutUser from '../services/authServices';
 import { logoutAsync } from '../store/authSlice';
 
 function UserMovieList() {
