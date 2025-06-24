@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(200),
       allowNull: false,
     },
+    movie_genre: {
+      type: DataTypes.STRING(200),
+      allowNull: false,
+    },
   });
 
   Movie.associate = (models) => {
