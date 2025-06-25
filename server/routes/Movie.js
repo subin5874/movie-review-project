@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Movie } = require('../models/');
 const validateToken = require('../middleware/authMiddleware');
+const { ConnectionAcquireTimeoutError } = require('sequelize');
 
 router.post(
   '/movieInfo',
@@ -35,5 +36,34 @@ router.post(
     }
   }
 );
+
+router.get('/movies/ids', async (req, res) => {
+  const ids = await Movie.findAll({ attributes: ['movie_no'] });
+  res.status(201).json(ids.map((movie) => movie.movie_no));
+});
+
+router.post('/genres', async (req, res) => {
+  const movieData = req.body;
+  let movie_no = movieData.movie_no;
+  let movie_genre = movieData.movie_genre;
+  if (movie_genre) {
+    try {
+      const result = await Movie.update(
+        {
+          movie_genre: JSON.stringify(movie_genre),
+        },
+        { where: { movie_no: movie_no } }
+      );
+      res.status(201).json({
+        message: '장르 추가 성공',
+      });
+    } catch (err) {
+      console.log('영화 장르 추가 에러:', err);
+      res.status(500).json({ error: 'DB 업데이트 실패' });
+    }
+  } else {
+    res.status(400).json({ error: 'movie_genre가 없음' });
+  }
+});
 
 module.exports = router;
